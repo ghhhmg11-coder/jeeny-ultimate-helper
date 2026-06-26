@@ -18,8 +18,7 @@ public class FloatingButtonService extends Service {
     private View floatingView;
     private boolean isMenuVisible = false;
 
-    @Override
-    public IBinder onBind(Intent intent) { return null; }
+    @Override public IBinder onBind(Intent intent) { return null; }
 
     @Override
     public void onCreate() {
@@ -28,32 +27,25 @@ public class FloatingButtonService extends Service {
         floatingView = LayoutInflater.from(this).inflate(R.layout.floating_layout, null);
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        );
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.TOP | Gravity.START;
-        params.x = 100;
-        params.y = 100;
+        params.x = 100; params.y = 100;
         windowManager.addView(floatingView, params);
 
-        Button btnFloatingHead = floatingView.findViewById(R.id.btn_floating_head);
-        LinearLayout layoutMenu = floatingView.findViewById(R.id.layout_menu);
-        Switch switchAutoAccept = floatingView.findViewById(R.id.switch_auto_accept);
+        Button btnFloatingHead       = floatingView.findViewById(R.id.btn_floating_head);
+        LinearLayout layoutMenu      = floatingView.findViewById(R.id.layout_menu);
+        Switch switchAutoAccept      = floatingView.findViewById(R.id.switch_auto_accept);
+        SharedPreferences prefs      = getSharedPreferences("SmartOrdersPrefs", MODE_PRIVATE);
 
-        SharedPreferences prefs = getSharedPreferences("SmartOrdersPrefs", MODE_PRIVATE);
         switchAutoAccept.setChecked(prefs.getBoolean("auto_accept", false));
-
         btnFloatingHead.setOnClickListener(v -> {
             layoutMenu.setVisibility(isMenuVisible ? View.GONE : View.VISIBLE);
             isMenuVisible = !isMenuVisible;
         });
-
         switchAutoAccept.setOnCheckedChangeListener((b, isChecked) ->
-            prefs.edit().putBoolean("auto_accept", isChecked).apply()
-        );
+            prefs.edit().putBoolean("auto_accept", isChecked).apply());
     }
 
     @Override

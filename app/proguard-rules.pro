@@ -1,2 +1,2 @@
-# Add project specific ProGuard rules here.
+# Keep all app classes
 -keep class com.jeenyultimate.helper.** { *; }
