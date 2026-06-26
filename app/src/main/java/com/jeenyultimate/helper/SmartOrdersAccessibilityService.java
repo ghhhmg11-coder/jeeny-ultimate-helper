@@ -6,12 +6,12 @@ import android.graphics.Path;
 import android.view.accessibility.AccessibilityEvent;
 import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 public class SmartOrdersAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        // حماية قصوى: العمل فقط وحصرياً داخل تطبيق جيني الكابتن
         if (event.getPackageName() == null ||
             !event.getPackageName().toString().equals("com.jeeny.driver")) {
             return;
@@ -20,16 +20,16 @@ public class SmartOrdersAccessibilityService extends AccessibilityService {
         SharedPreferences prefs = getSharedPreferences("SmartOrdersPrefs", MODE_PRIVATE);
         if (!prefs.getBoolean("auto_accept", false)) return;
 
-        // جلب أبعاد الشاشة الحالية بدقة هندسية
         DisplayMetrics dm = getResources().getDisplayMetrics();
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        // حساب نقطة الضغط في منتصف العرض وأسفل الشاشة تماماً (فوق زر قبول العرض الفعلي)
+        // الضغط في أسفل الشاشة تماماً بنسبة 90%
         int targetX = width / 2;
-        int targetY = (int) (height * 0.88); // استهداف دقيق لمنطقة الزر السفلي بنسبة 88%
+        int targetY = (int) (height * 0.90);
 
-        // تنفيذ نقرة مادية سريعة وقوية بقوة 50 مللي ثانية
+        Log.d("JeenyHelper", "Executing click at X: " + targetX + " Y: " + targetY);
+
         GestureDescription.Builder gestureBuilder = new GestureDescription.Builder();
         Path clickPath = new Path();
         clickPath.moveTo(targetX, targetY);
@@ -37,7 +37,6 @@ public class SmartOrdersAccessibilityService extends AccessibilityService {
 
         dispatchGesture(gestureBuilder.build(), null, null);
 
-        // تحديث العداد
         int currentCount = prefs.getInt("accepted_count", 0);
         prefs.edit().putInt("accepted_count", currentCount + 1).apply();
     }
