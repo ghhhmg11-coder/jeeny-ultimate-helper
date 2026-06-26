@@ -3,59 +3,44 @@ package com.jeenyultimate.helper;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
 import android.graphics.Path;
-import android.graphics.Rect;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
-import java.util.List;
 
 public class SmartOrdersAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if (event.getPackageName() != null &&
-            event.getPackageName().toString().equals("com.android.systemui")) return;
+        // حماية قصوى: العمل فقط وحصرياً داخل تطبيق جيني الكابتن
+        if (event.getPackageName() == null ||
+            !event.getPackageName().toString().equals("com.jeeny.driver")) {
+            return;
+        }
 
         SharedPreferences prefs = getSharedPreferences("SmartOrdersPrefs", MODE_PRIVATE);
         if (!prefs.getBoolean("auto_accept", false)) return;
 
-        AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-        if (rootNode == null) return;
+        // جلب أبعاد الشاشة الحالية بدقة هندسية
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int width  = dm.widthPixels;
+        int height = dm.heightPixels;
 
-        List<AccessibilityNodeInfo> nodes = rootNode.findAccessibilityNodeInfosByText("قبول العرض");
-        if (nodes != null && !nodes.isEmpty()) {
-            for (AccessibilityNodeInfo node : nodes) {
-                Rect bounds = new Rect();
-                node.getBoundsInScreen(bounds);
+        // استهداف دقيق: منتصف العرض + 88% من ارتفاع الشاشة (فوق زر قبول العرض مباشرة)
+        int targetX = width / 2;
+        int targetY = (int) (height * 0.88);
 
-                DisplayMetrics dm = getResources().getDisplayMetrics();
-                int screenHeight = dm.heightPixels;
-                int screenWidth  = dm.widthPixels;
+        // نقرة مادية سريعة 50ms
+        GestureDescription.Builder gestureBuilder = new GestureDescription.Builder();
+        Path clickPath = new Path();
+        clickPath.moveTo(targetX, targetY);
+        gestureBuilder.addStroke(
+            new GestureDescription.StrokeDescription(clickPath, 0, 50));
 
-                // الضغط في أسفل الشاشة — مكان زر قبول جيني الفعلي
-                int clickX = screenWidth / 2;
-                int clickY = screenHeight - (screenHeight / 8);
+        dispatchGesture(gestureBuilder.build(), null, null);
 
-                // استخدام الإحداثيات الفعلية للزر إن وُجدت
-                if (!bounds.isEmpty() && bounds.centerX() > 0 && bounds.centerY() > 0) {
-                    clickX = bounds.centerX();
-                    clickY = bounds.centerY();
-                }
-
-                GestureDescription.Builder gb = new GestureDescription.Builder();
-                Path p = new Path();
-                p.moveTo(clickX, clickY);
-                gb.addStroke(new GestureDescription.StrokeDescription(p, 0, 80));
-                dispatchGesture(gb.build(), null, null);
-
-                prefs.edit().putInt("accepted_count",
-                    prefs.getInt("accepted_count", 0) + 1).apply();
-                node.recycle();
-                break;
-            }
-        }
-        rootNode.recycle();
+        // تحديث عداد الرحلات المقبولة
+        int currentCount = prefs.getInt("accepted_count", 0);
+        prefs.edit().putInt("accepted_count", currentCount + 1).apply();
     }
 
     @Override
