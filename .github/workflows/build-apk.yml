@@ -1,4 +1,4 @@
-name: Build Release APK
+name: Build Signed Release APK
 
 on:
   push:
@@ -27,20 +27,51 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_HOME" > local.properties
 
-      - name: Build Release APK
-        run: gradle assembleRelease --no-daemon --stacktrace
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-
-      - name: Locate and rename APK
+      - name: Generate Keystore
         run: |
-          APK=$(find . -name "*.apk" -type f | head -1)
-          echo "Found: $APK"
-          cp "$APK" JeenyUltimateHelper.apk
+          keytool -genkeypair \
+            -alias jeeny_key \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass jeeny12345 \
+            -keypass jeeny12345 \
+            -dname "CN=JeenyUltimateHelper, OU=Dev, O=Jeeny, L=Riyadh, S=Riyadh, C=SA" \
+            -keystore jeeny.keystore
 
-      - name: Upload APK
+      - name: Clean and Build Release APK
+        run: |
+          gradle clean assembleRelease --no-daemon --stacktrace
+
+      - name: Find build-tools version
+        run: |
+          BT=$(ls $ANDROID_HOME/build-tools/ | sort -V | tail -1)
+          echo "BUILD_TOOLS=$BT" >> $GITHUB_ENV
+          echo "Using build-tools: $BT"
+
+      - name: Zipalign APK
+        run: |
+          $ANDROID_HOME/build-tools/$BUILD_TOOLS/zipalign -v -p 4 \
+            app/build/outputs/apk/release/app-release-unsigned.apk \
+            app-release-aligned.apk
+
+      - name: Sign APK with apksigner
+        run: |
+          $ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner sign \
+            --ks jeeny.keystore \
+            --ks-pass pass:jeeny12345 \
+            --key-pass pass:jeeny12345 \
+            --ks-key-alias jeeny_key \
+            --out JeenyUltimateHelper.apk \
+            app-release-aligned.apk
+
+      - name: Verify APK signature
+        run: |
+          $ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner verify --verbose JeenyUltimateHelper.apk
+
+      - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: JeenyUltimateHelper-APK
+          name: JeenyUltimateHelper-Signed
           path: JeenyUltimateHelper.apk
           retention-days: 30
