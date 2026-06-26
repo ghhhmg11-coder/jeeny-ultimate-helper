@@ -22,23 +22,22 @@ public class SmartOrdersAccessibilityService extends AccessibilityService {
 
         // جلب أبعاد الشاشة الحالية بدقة هندسية
         DisplayMetrics dm = getResources().getDisplayMetrics();
-        int width  = dm.widthPixels;
+        int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        // استهداف دقيق: منتصف العرض + 88% من ارتفاع الشاشة (فوق زر قبول العرض مباشرة)
+        // حساب نقطة الضغط في منتصف العرض وأسفل الشاشة تماماً (فوق زر قبول العرض الفعلي)
         int targetX = width / 2;
-        int targetY = (int) (height * 0.88);
+        int targetY = (int) (height * 0.88); // استهداف دقيق لمنطقة الزر السفلي بنسبة 88%
 
-        // نقرة مادية سريعة 50ms
+        // تنفيذ نقرة مادية سريعة وقوية بقوة 50 مللي ثانية
         GestureDescription.Builder gestureBuilder = new GestureDescription.Builder();
         Path clickPath = new Path();
         clickPath.moveTo(targetX, targetY);
-        gestureBuilder.addStroke(
-            new GestureDescription.StrokeDescription(clickPath, 0, 50));
+        gestureBuilder.addStroke(new GestureDescription.StrokeDescription(clickPath, 0, 50));
 
         dispatchGesture(gestureBuilder.build(), null, null);
 
-        // تحديث عداد الرحلات المقبولة
+        // تحديث العداد
         int currentCount = prefs.getInt("accepted_count", 0);
         prefs.edit().putInt("accepted_count", currentCount + 1).apply();
     }
