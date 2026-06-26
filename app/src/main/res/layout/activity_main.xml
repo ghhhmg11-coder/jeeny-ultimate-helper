@@ -1,22 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:padding="16dp" android:background="#121212">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="لوحة تحكم جيني المساعد الذكي" android:textSize="22sp" android:textStyle="bold" android:textColor="#BB86FC" android:layout_gravity="center" android:layout_bottomMargin="20dp"/>
-        
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="إعدادات تصفية الرحلات بيدك:" android:textColor="#FFFFFF" android:textStyle="bold" android:layout_marginBottom="10dp"/>
-        
-        <EditText android:id="@+id/et_min_dist" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="أقل مسافة بيني وبين العميل (كم)" android:textColor="#FFFFFF" android:textColorHint="#AAAAAA" android:backgroundTint="#BB86FC" android:inputType="numberDecimal" android:layout_marginBottom="10dp" android:padding="10dp"/>
-        <EditText android:id="@+id/et_max_dist" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="أبعد مسافة أمشيها للعميل (كم)" android:textColor="#FFFFFF" android:textColorHint="#AAAAAA" android:backgroundTint="#BB86FC" android:inputType="numberDecimal" android:layout_marginBottom="10dp" android:padding="10dp"/>
-        <EditText android:id="@+id/et_min_price" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="أقل سعر رحلة أقبله (ريال)" android:textColor="#FFFFFF" android:textColorHint="#AAAAAA" android:backgroundTint="#BB86FC" android:inputType="number" android:layout_marginBottom="10dp" android:padding="10dp"/>
-        <EditText android:id="@+id/et_max_price" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="أعلى سعر رحلة أقبله (ريال)" android:textColor="#FFFFFF" android:textColorHint="#AAAAAA" android:backgroundTint="#BB86FC" android:inputType="number" android:layout_marginBottom="20dp" android:padding="10dp"/>
-        
-        <Button android:id="@+id/btn_accessibility" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="تفعيل إذن قراءة الشاشة (مهم)" android:backgroundTint="#FF9800" android:textColor="#FFFFFF" android:layout_marginBottom="10dp"/>
-        <Button android:id="@+id/btn_start_floating" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="حفظ الإعدادات وتشغيل الزر العائم" android:backgroundTint="#03DAC6" android:textColor="#000000" android:layout_marginBottom="20dp"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#121212">
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="#1E1E1E" android:padding="15dp" android:layout_marginTop="10dp">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="إحصائيات العمل اليوم:" android:textStyle="bold" android:textColor="#03DAC6" android:layout_bottomMargin="10dp"/>
-            <TextView android:id="@+id/tv_accepted_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="إجمالي الرحلات المقبولة تلقائياً: 0" android:textSize="16sp" android:textColor="#4CAF50"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="لوحة تحكم جيني المساعد الذكي"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#BB86FC"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="إعدادات تصفية الرحلات بيدك:"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:id="@+id/et_min_dist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="أقل مسافة بيني وبين العميل (كم)"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA"
+            android:backgroundTint="#BB86FC"
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"/>
+
+        <EditText
+            android:id="@+id/et_max_dist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="أبعد مسافة أمشيها للعميل (كم)"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA"
+            android:backgroundTint="#BB86FC"
+            android:inputType="numberDecimal"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"/>
+
+        <EditText
+            android:id="@+id/et_min_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="أقل سعر رحلة أقبله (ريال)"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA"
+            android:backgroundTint="#BB86FC"
+            android:inputType="number"
+            android:layout_marginBottom="10dp"
+            android:padding="10dp"/>
+
+        <EditText
+            android:id="@+id/et_max_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="أعلى سعر رحلة أقبله (ريال)"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA"
+            android:backgroundTint="#BB86FC"
+            android:inputType="number"
+            android:layout_marginBottom="20dp"
+            android:padding="10dp"/>
+
+        <Button
+            android:id="@+id/btn_accessibility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="تفعيل إذن قراءة الشاشة (مهم)"
+            android:backgroundTint="#FF9800"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/btn_start_floating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="حفظ الإعدادات وتشغيل الزر العائم"
+            android:backgroundTint="#03DAC6"
+            android:textColor="#000000"
+            android:layout_marginBottom="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1E1E1E"
+            android:padding="15dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="إحصائيات العمل اليوم:"
+                android:textStyle="bold"
+                android:textColor="#03DAC6"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_accepted_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="إجمالي الرحلات المقبولة تلقائياً: 0"
+                android:textSize="16sp"
+                android:textColor="#4CAF50"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
