@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#E61E1E1E"
+    android:padding="10dp"
+    android:elevation="16dp">
+
+    <!-- رأس اللوحة - قابل للسحب -->
+    <LinearLayout
+        android:id="@+id/panel_header"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:background="#2D2D2D"
+        android:paddingStart="10dp"
+        android:paddingEnd="6dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="⚡ لوحة تحكم جيني الذكية"
+            android:textColor="#03DAC6"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:gravity="end" />
+
+        <Button
+            android:id="@+id/btn_float_close"
+            android:layout_width="60dp"
+            android:layout_height="32dp"
+            android:text="إغلاق"
+            android:backgroundTint="#CF6679"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- حالة النظام -->
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🔴 النظام متوقف"
+        android:textColor="#CF6679"
+        android:textSize="11sp"
+        android:gravity="center"
+        android:paddingTop="6dp"
+        android:paddingBottom="4dp" />
+
+    <!-- فاصل -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#3D3D3D"
+        android:layout_marginBottom="6dp" />
+
+    <!-- صف القبول التلقائي -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="القبول التلقائي السريع"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:gravity="end" />
+
+        <Switch
+            android:id="@+id/sw_floating_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:thumbTint="#03DAC6"
+            android:trackTint="#555555"
+            android:layout_marginStart="10dp" />
+    </LinearLayout>
+
+    <!-- صف قنص بدون وجهة -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:layout_marginTop="4dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="قبول الطلبات بدون وجهة"
+            android:textColor="#AAAAAA"
+            android:textSize="12sp"
+            android:gravity="end" />
+
+        <Switch
+            android:id="@+id/sw_no_destination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:thumbTint="#BB86FC"
+            android:trackTint="#555555"
+            android:layout_marginStart="10dp" />
+    </LinearLayout>
+
+    <!-- فاصل -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#3D3D3D"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="6dp" />
+
+    <!-- حقل أقل سعر -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp">
+
+        <EditText
+            android:id="@+id/et_float_min_price"
+            android:layout_width="80dp"
+            android:layout_height="36dp"
+            android:hint="0"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#666666"
+            android:inputType="number"
+            android:backgroundTint="#BB86FC"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:padding="4dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="أقل سعر مقبول (ريال)"
+            android:textColor="#CCCCCC"
+            android:textSize="12sp"
+            android:gravity="end"
+            android:layout_marginEnd="10dp" />
+    </LinearLayout>
+
+    <!-- حقل أقصى وقت انتظار -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:layout_marginTop="6dp">
+
+        <EditText
+            android:id="@+id/et_float_max_wait"
+            android:layout_width="80dp"
+            android:layout_height="36dp"
+            android:hint="10"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#666666"
+            android:inputType="number"
+            android:backgroundTint="#03DAC6"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:padding="4dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="أقصى وقت انتظار (دقيقة)"
+            android:textColor="#CCCCCC"
+            android:textSize="12sp"
+            android:gravity="end"
+            android:layout_marginEnd="10dp" />
+    </LinearLayout>
+
+    <!-- زر الحفظ -->
+    <Button
+        android:id="@+id/btn_float_save"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="حفظ الإعدادات وتشغيل النظام"
+        android:backgroundTint="#BB86FC"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp" />
+
+</LinearLayout>
