@@ -1,55 +1,70 @@
 package com.jeenyultimate.helper;
-import android.app.Activity;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.content.SharedPreferences;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends Activity {
-    private SharedPreferences prefs;
+public class MainActivity extends AppCompatActivity {
+
+    private static final int REQUEST_OVERLAY_PERMISSION = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        prefs = getSharedPreferences("SmartOrdersPrefs", MODE_PRIVATE);
 
-        EditText etPrice = findViewById(R.id.et_min_price);
-        EditText etDist = findViewById(R.id.et_max_dist);
-        TextView tvCount = findViewById(R.id.tv_accepted_count);
-        Button btnAcc = findViewById(R.id.btn_accessibility);
-        Button btnFloat = findViewById(R.id.btn_start_floating);
+        Button btnStartFloating = findViewById(R.id.btn_start_floating);
+        Button btnOpenAccessibility = findViewById(R.id.btn_open_accessibility);
 
-        tvCount.setText("إجمالي الرحلات المقبولة تلقائياً: " + prefs.getInt("accepted_count", 0));
-
-        btnAcc.setOnClickListener(v -> startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)));
-
-        btnFloat.setOnClickListener(v -> {
-            String priceStr = etPrice.getText().toString();
-            String distStr = etDist.getText().toString();
-            prefs.edit()
-                .putInt("min_price", Integer.parseInt(priceStr.isEmpty() ? "0" : priceStr))
-                .putInt("max_dist", Integer.parseInt(distStr.isEmpty() ? "99" : distStr))
-                .apply();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-                startActivityForResult(
-                    new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName())), 101);
+        btnStartFloating.setOnClickListener(v -> {
+            if (Settings.canDrawOverlays(this)) {
+                startFloatingService();
             } else {
-                startService(new Intent(this, FloatingButtonService.class));
+                requestOverlayPermission();
             }
+        });
+
+        btnOpenAccessibility.setOnClickListener(v -> {
+            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            startActivity(intent);
+            Toast.makeText(this,
+                    "ابحث عن 'Smart Orders' وفعّل الخدمة",
+                    Toast.LENGTH_LONG).show();
         });
     }
 
+    private void startFloatingService() {
+        Intent intent = new Intent(this, FloatingService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent);
+        } else {
+            startService(intent);
+        }
+        Toast.makeText(this, "تم تشغيل لوحة التحكم العائمة", Toast.LENGTH_SHORT).show();
+    }
+
+    private void requestOverlayPermission() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + getPackageName()));
+        startActivityForResult(intent, REQUEST_OVERLAY_PERMISSION);
+    }
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        ((TextView) findViewById(R.id.tv_accepted_count))
-            .setText("إجمالي الرحلات المقبولة تلقائياً: " + prefs.getInt("accepted_count", 0));
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_OVERLAY_PERMISSION) {
+            if (Settings.canDrawOverlays(this)) {
+                startFloatingService();
+            } else {
+                Toast.makeText(this,
+                        "يجب منح صلاحية الظهور فوق التطبيقات",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
