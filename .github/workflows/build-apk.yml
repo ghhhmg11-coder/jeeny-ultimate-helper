@@ -1,4 +1,4 @@
-name: Build Signed Release APK
+name: Build APK
 
 on:
   push:
@@ -22,56 +22,26 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: '8.0'
+          gradle-version: '8.6'
 
-      - name: Create local.properties
-        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Generate Keystore
+      - name: Accept Android licenses
+        run: yes | sdkmanager --licenses || true
+
+      - name: Install build tools and platform
         run: |
-          keytool -genkeypair \
-            -alias jeeny_key \
-            -keyalg RSA \
-            -keysize 2048 \
-            -validity 10000 \
-            -storepass jeeny12345 \
-            -keypass jeeny12345 \
-            -dname "CN=JeenyUltimateHelper, OU=Dev, O=Jeeny, L=Riyadh, S=Riyadh, C=SA" \
-            -keystore jeeny.keystore
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Clean and Build Release APK
-        run: |
-          gradle clean assembleRelease --no-daemon --stacktrace
+      - name: Build Debug APK
+        run: gradle assembleDebug
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
 
-      - name: Find build-tools version
-        run: |
-          BT=$(ls $ANDROID_HOME/build-tools/ | sort -V | tail -1)
-          echo "BUILD_TOOLS=$BT" >> $GITHUB_ENV
-          echo "Using build-tools: $BT"
-
-      - name: Zipalign APK
-        run: |
-          $ANDROID_HOME/build-tools/$BUILD_TOOLS/zipalign -v -p 4 \
-            app/build/outputs/apk/release/app-release-unsigned.apk \
-            app-release-aligned.apk
-
-      - name: Sign APK with apksigner
-        run: |
-          $ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner sign \
-            --ks jeeny.keystore \
-            --ks-pass pass:jeeny12345 \
-            --key-pass pass:jeeny12345 \
-            --ks-key-alias jeeny_key \
-            --out JeenyUltimateHelper.apk \
-            app-release-aligned.apk
-
-      - name: Verify APK signature
-        run: |
-          $ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner verify --verbose JeenyUltimateHelper.apk
-
-      - name: Upload Signed APK
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: JeenyUltimateHelper-Signed
-          path: JeenyUltimateHelper.apk
+          name: jeeny-helper-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
