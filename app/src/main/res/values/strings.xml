@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Jeeny Ultimate Helper</string>
+    <string name="app_name">مساعد جيني الذكي</string>
+    <string name="accessibility_service_label">Smart Orders - قبول تلقائي جيني</string>
+    <string name="accessibility_service_description">يراقب تطبيق جيني ويضغط على زر القبول تلقائياً عند وصول طلب جديد يطابق الفلتر المحدد.</string>
 </resources>
