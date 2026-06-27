@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- صلاحية الظهور فوق التطبيقات -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <!-- صلاحية خدمة قراءة الشاشة -->
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
-    <!-- صلاحيات أخرى مطلوبة -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@android:drawable/ic_dialog_info"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+        android:theme="@style/Theme.JeenyUltimateHelper">
 
-        <!-- النشاط الرئيسي -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -27,13 +22,11 @@
             </intent-filter>
         </activity>
 
-        <!-- خدمة اللوحة العائمة -->
         <service
             android:name=".FloatingService"
             android:exported="false"
-            android:foregroundServiceType="mediaProjection" />
+            android:foregroundServiceType="specialUse" />
 
-        <!-- خدمة إمكانية الوصول للنقر التلقائي -->
         <service
             android:name=".SmartOrdersAccessibilityService"
             android:exported="true"
